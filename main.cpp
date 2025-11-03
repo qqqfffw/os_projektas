@@ -114,7 +114,6 @@ void replaceBlockInFile(int blockAddress, int offset, string newText, string fil
 
 int main(){
    ofstream mem_file;
-   Converter converter;
 
    mem_file.open(VM_MEMORY_FILE);
 
