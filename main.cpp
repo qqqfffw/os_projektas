@@ -5,9 +5,9 @@
 
 using namespace std;
 
-class Converter {
+class Converter{
 public:
-   string toHex(int num1){
+   string numToHex(int num1){
       if (num1 == 0)
          return "0";
       u_int num = num1;
@@ -33,9 +33,8 @@ string getBlock(int address, string fileName){
    string addressHex;
    ifstream file;
 
-   
-   if(address <= 15) addressHex = "0" + converter.toHex(address);
-   else addressHex = converter.toHex(address);
+   if(address <= 15) addressHex = "0" + converter.numToHex(address);
+   else addressHex = converter.numToHex(address);
 
    file.open(fileName);
 
@@ -54,8 +53,12 @@ string getBlock(int address, string fileName){
    return addressHex;
 }
 
-string getWords(int offset){
-   return "d";
+string getWord(string block, int offset){
+   string word;
+   size_t start = 3 + offset * 7;
+   word = block.substr(start, 6);
+   
+   return word;
 }
 
 void replaceBlockInFile(int blockAddress, int offset, string newText, string fileName) {
@@ -66,7 +69,7 @@ void replaceBlockInFile(int blockAddress, int offset, string newText, string fil
    Converter converter;
    bool replaced = false;
 
-   blockAddressHex = converter.toHex(blockAddress);
+   blockAddressHex = converter.numToHex(blockAddress);
 
    stringstream ssin(blockAddressHex);
    ssin >> hex >> blockAddress;
@@ -90,15 +93,14 @@ void replaceBlockInFile(int blockAddress, int offset, string newText, string fil
                   line.replace(start, temp_text.size(), temp_text);
                   newText = newText.erase(0, 6);
                   start += 7;
-                  //cout << newText << endl;
+                  // cout << newText << endl;
                   // replaceBlockInFile(blockAddress, offset+1, newText, fileName);
                }
             }
-
          }
          buffer << line << "\n";
          replaced = true;
-      } else{
+      }else{
          buffer << line << "\n";
       }
    }
@@ -112,38 +114,45 @@ void replaceBlockInFile(int blockAddress, int offset, string newText, string fil
 #define TOTAL_BLOCKS 256
 #define BLOCK_SIZE 256
 #define VM_MEMORY_FILE "vm_mem.txt"
+#define DATA
 
 int main(){
-  ofstream mem_file;
-  Converter converter;
+   ofstream mem_file;
+   Converter converter;
 
+   mem_file.open(VM_MEMORY_FILE);
 
-  mem_file.open(VM_MEMORY_FILE);
+   if(!mem_file.is_open()){
+      return 1;
+   }
 
-  if(!mem_file.is_open()){
-    return 1;
-  }
+   for(int i=0; i<TOTAL_BLOCKS; ++i){
+      if (i <= 15) mem_file << "0" << converter.numToHex(i) << " ";
+      else mem_file << converter.numToHex(i) << " ";
 
-  for(int i=0; i<TOTAL_BLOCKS; ++i){
-    if (i <= 15) mem_file << "0" << converter.toHex(i) << " ";
-    else mem_file << converter.toHex(i) << " ";
+      for(int j=0; j<BLOCK_SIZE; ++j){
+         mem_file << "------";
+         mem_file << " ";
+      }
+      if(i != 255) mem_file << endl;
+   }
 
-    for(int j=0; j<BLOCK_SIZE; ++j){
-      mem_file << "------";
-      mem_file << " ";
-    }
-    if(i != 255) mem_file << endl;
-  }
+   cout << "File created" << endl;
 
-  cout << "File created" << endl;
+   mem_file.close();
 
-  mem_file.close();
+   replaceBlockInFile(0, 0, "hellow", VM_MEMORY_FILE);
 
-  //string block;
-  //block = getBlock(100, VM_MEMORY_FILE);
+   string word;
+   word = getWord(getBlock(0, VM_MEMORY_FILE), 0);
 
-  replaceBlockInFile(10, 55, "hellow next ", VM_MEMORY_FILE);
+   cout << getBlock(0, VM_MEMORY_FILE) << endl;
 
-  cout << getBlock(10, VM_MEMORY_FILE) << endl;
-  return 0;
+   cout << word << endl;
+
+   word = getWord(getBlock(0, VM_MEMORY_FILE), 1);
+
+   cout << word << endl;
+
+   return 0;
 }
