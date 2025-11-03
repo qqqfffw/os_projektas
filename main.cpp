@@ -1,5 +1,3 @@
-#include <fstream>
-#include <iostream>
 #include "commands.h"
 #include "utils.hpp"
 
@@ -11,7 +9,6 @@ using namespace std;
 #define STACK_SEG_START 10
 #define STACK_SEG_END 19
 #define DATA_SEG_START 0
-
 
 int main(){
    ofstream mem_file;

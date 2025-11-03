@@ -4,7 +4,7 @@ CXXFLAGS ?= -O2 -std=c++17
 
 # Project
 TARGET := main
-SRCS   := main.cpp commands.cpp
+SRCS   := main.cpp commands.cpp utils.cpp
 OBJS   := $(SRCS:.cpp=.o)
 
 # --- OS-specific bits ---------------------------------------------------------
@@ -29,10 +29,10 @@ $(TARGET)$(EXE): $(OBJS)
 	$(CXX) $(OBJS) -o $@
 
 # Compile (explicit deps for headers)
-main.o:     main.cpp commands.h
+main.o:     main.cpp commands.h utils.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commands.o: commands.cpp commands.h
+commands.o: commands.cpp commands.h utils.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Run the program

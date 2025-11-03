@@ -1,25 +1,19 @@
 #include "utils.hpp"
-#include <string>
-#include <iostream>
-#include <bits/stdc++.h>
 
-class Converter{
-   public:
-      std::string numToHex(int num1){
-         std::string v{};
-         std::stringstream ss;
-         ss << std::hex << std::nouppercase << num1;
-         ss >> v;
-         return v;
-      }
+std::string Converter::numToHex(int num1) {
+   std::string v{};
+   std::stringstream ss;
+   ss << std::hex << std::nouppercase << num1;
+   ss >> v;
+   return v;
+}
 
-      int hexToNum(std::string hexStr){
-         int v{};
-         std::stringstream ss(hexStr);
-         ss >> std::hex >> v;
-         return v;
-      } 
-};
+int Converter::hexToNum(std::string hexStr) {
+   int v{};
+   std::stringstream ss(hexStr);
+   ss >> std::hex >> v;
+   return v;
+}
 
 Converter converter;
 
@@ -105,4 +99,3 @@ std::string getWord(std::string block, int offset){
    
    return word;
 }
-
