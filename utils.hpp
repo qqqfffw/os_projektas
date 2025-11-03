@@ -1,0 +1,19 @@
+#ifndef UTILS_HPP
+#define UTILS_HPP
+
+#include <string>
+
+std::string getBlock(int, std::string);
+class Converter{
+   public:
+      std::string numToHex(int num1);
+      int hexToNum(std::string hexStr);
+};
+
+std::string getBlock(int address, std::string fileName);
+
+void replaceBlockInFile(int blockAddress, int offset, std::string newText, std::string fileName);
+
+std::string getWord(std::string block, int offset);
+
+#endif

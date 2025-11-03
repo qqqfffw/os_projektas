@@ -1,119 +1,21 @@
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <bits/stdc++.h>
+#include "commands.h"
+#include "utils.hpp"
 
 using namespace std;
-
-class Converter{
-   public:
-      string numToHex(int num1){
-         string v{};
-         stringstream ss;
-         ss << hex << nouppercase << num1;
-         ss >> v;
-         return v;
-      }
-
-      int hexToNum(string hexStr){
-         int v{};
-         stringstream ss(hexStr);
-         ss >> hex >> v;
-         return v;
-      } 
-};
-
-Converter converter;
-
-string getBlock(int address, string fileName){
-   string addressHex;
-   ifstream file;
-
-   if(address <= 15) addressHex = "0" + converter.numToHex(address);
-   else addressHex = converter.numToHex(address);
-
-   file.open(fileName);
-
-   string line;
-   if(file.is_open()){
-      while(getline(file, line)){
-         if(line.substr(0, 3) == addressHex + " "){
-            file.close();
-            return line;
-         }
-      }
-   }
-
-   file.close();
-
-   return addressHex;
-}
-
-string getWord(string block, int offset){
-   string word;
-   size_t start = 3 + offset * 7;
-   word = block.substr(start, 6);
-   
-   return word;
-}
-
-void replaceBlockInFile(int blockAddress, int offset, string newText, string fileName) {
-   ifstream inFile(fileName);
-   ostringstream buffer;
-   string line;
-   string blockAddressHex;
-   Converter converter;
-   bool replaced = false;
-
-   blockAddressHex = converter.numToHex(blockAddress);
-
-   stringstream ssin(blockAddressHex);
-   ssin >> hex >> blockAddress;
-
-   stringstream ss;
-   ss << hex << setw(2) << setfill('0') << nouppercase << blockAddress;
-   string blockAddrStr = ss.str();
-
-   cout << blockAddrStr << endl;
-
-   while (getline(inFile, line)) {
-      if (!replaced && line.substr(0, 3) == blockAddrStr + " ") {
-         size_t start = 3 + offset * 7;
-         if(start + 6 <= line.size()) {
-            if(newText.size() <= 6){
-               line.replace(start, newText.size(), newText);
-            }else if(newText.size() > 6){
-               while(newText.size() != 0){
-                  string temp_text;
-                  temp_text = newText.substr(0, 6);
-                  line.replace(start, temp_text.size(), temp_text);
-                  newText = newText.erase(0, 6);
-                  start += 7;
-                  // cout << newText << endl;
-                  // replaceBlockInFile(blockAddress, offset+1, newText, fileName);
-               }
-            }
-         }
-         buffer << line << "\n";
-         replaced = true;
-      }else{
-         buffer << line << "\n";
-      }
-   }
-   inFile.close();
-
-   ofstream outFile(fileName);
-   outFile << buffer.str();
-   outFile.close();
-}
 
 #define TOTAL_BLOCKS 256
 #define BLOCK_SIZE 256
 #define VM_MEMORY_FILE "vm_mem.txt"
-#define DATA
+#define STACK_SEG_START 10
+#define STACK_SEG_END 19
+#define DATA_SEG_START 0
+
 
 int main(){
    ofstream mem_file;
+   Converter converter;
 
    mem_file.open(VM_MEMORY_FILE);
 
