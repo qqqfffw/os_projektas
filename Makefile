@@ -15,4 +15,4 @@ run: main
 	./main
 
 clean:
-	rm -f main $(OBJS)
+	rm -f main $(OBJS)s
