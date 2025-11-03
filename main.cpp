@@ -6,30 +6,26 @@
 using namespace std;
 
 class Converter{
-public:
-   string numToHex(int num1){
-      if (num1 == 0)
-         return "0";
-      u_int num = num1;
-      string s = "";
-      while (num) {
-         int temp = num % 16;
-         if (temp <= 9)
-            s += (48 + temp);
-         else
-            s += (87 + temp);
-         num = num / 16;
+   public:
+      string numToHex(int num1){
+         string v{};
+         stringstream ss;
+         ss << hex << nouppercase << num1;
+         ss >> v;
+         return v;
       }
-      reverse(s.begin(), s.end());
-      return s;
-   }
 
-   // TODO:
-   // Add hexToDec function 
+      int hexToNum(string hexStr){
+         int v{};
+         stringstream ss(hexStr);
+         ss >> hex >> v;
+         return v;
+      } 
 };
 
+Converter converter;
+
 string getBlock(int address, string fileName){
-   Converter converter;
    string addressHex;
    ifstream file;
 
@@ -153,6 +149,8 @@ int main(){
    word = getWord(getBlock(0, VM_MEMORY_FILE), 1);
 
    cout << word << endl;
+
+   cout << converter.hexToNum("0a") << endl;
 
    return 0;
 }
