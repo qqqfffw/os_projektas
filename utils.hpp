@@ -7,6 +7,7 @@
 #include <iostream>
 #include <bits/stdc++.h>
 
+#define VM_MEMORY_FILE "vm_mem.txt"
 struct Address {
     int block; 
     int offset;  

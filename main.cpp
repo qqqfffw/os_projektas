@@ -5,7 +5,6 @@ using namespace std;
 
 #define TOTAL_BLOCKS 256
 #define BLOCK_SIZE 256
-#define VM_MEMORY_FILE "vm_mem.txt"
 #define STACK_SEG_START 10
 #define STACK_SEG_END 19
 #define DATA_SEG_START 0
