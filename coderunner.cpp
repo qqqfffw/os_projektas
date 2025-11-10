@@ -25,7 +25,6 @@ void runProgram(){
             pc = JDXXYY(pc);
         }else if(codeWord.compare(0, 7, "DEDUCT") == 0){
             DEDUCT();
-            pc.offset++;
         }else if(codeWord.compare(0, 7, "SUSPND") == 0){
             break;
         }
