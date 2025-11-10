@@ -5,7 +5,7 @@
 
 void DEDUCT();
 void PUXXYY();
-void JDXXYY();
+Address JDXXYY();
 void SUSPND();
 
 #endif

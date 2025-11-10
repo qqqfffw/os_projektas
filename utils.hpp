@@ -7,6 +7,11 @@
 #include <iostream>
 #include <bits/stdc++.h>
 
+struct Address {
+    int block; 
+    int offset;  
+};
+
 class Converter {
 public:
 	std::string numToHex(int num1);
