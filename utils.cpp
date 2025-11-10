@@ -99,3 +99,4 @@ std::string getWord(std::string block, int offset){
    
    return word;
 }
+

@@ -4,8 +4,8 @@
 #include "utils.hpp"
 
 void DEDUCT();
-void PUXXYY();
-Address JDXXYY();
+void PUXXYY(const std::string&);
+Address JDXXYY(const Address&);
 void SUSPND();
 
 #endif

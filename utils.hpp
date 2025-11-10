@@ -24,4 +24,6 @@ std::string getBlock(int address, std::string fileName);
 void replaceBlockInFile(int blockAddress, int offset, std::string newText, std::string fileName);
 std::string getWord(std::string block, int offset);
 
+void runProgram();
+
 #endif

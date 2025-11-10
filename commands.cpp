@@ -1,4 +1,4 @@
-#include "commands.h"
+#include "commands.hpp"
 #include "utils.hpp"
 
 void DEDUCT(){
@@ -7,74 +7,46 @@ void DEDUCT(){
 
 //TODO till block 19(included)
 //Finds puxxyy and pushes the data into the stack block which starts at 10 for now only 10 block is checked
-void PUXXYY() {
+void PUXXYY(const std::string& pu) {
     Converter converter;
-    const int STACK_START = 10;  
+    const int STACK_START = 10;
 
-    for (int i = 0; i < 5; ++i) {
-
-        std::string codeBlock = getBlock(5 + i, VM_MEMORY_FILE);
-
-        //Checking evey word in code segment
-        for (int offset = 0; ; ++offset) {
-            int start = 3 + offset * 7; //word reading logic
+    //XX - data block YY - data offset 
+    std::string xx_hex = pu.substr(2, 2);
+    std::string yy_hex = pu.substr(4, 2);
 
 
-            //stops if no word left
-            if (start + 6 > codeBlock.size()) {
-                break;
-            }
-            
-        
-            std::string pu = getWord(codeBlock, offset);
+    int dataBlock  = converter.hexToNum(xx_hex);
+    int dataOffset = converter.hexToNum(yy_hex);
 
-            //word starts with PU
-            if (pu.compare(0, 2, "PU") != 0) {
-                continue;
-            }
+    //read data seg
+    std::string dataBlockLine = getBlock(dataBlock, VM_MEMORY_FILE);
+    int dataStart = 3 + dataOffset * 7;
+    std::string dataWord = getWord(dataBlockLine, dataOffset);
 
-            //PUXXYY XX - data block YY - offset
-            std::string xx_hex = pu.substr(2, 2);  //data block
-            std::string yy_hex = pu.substr(4, 2);  //word offset
+    //find free space in stack
+    std::string stackBlock = getBlock(STACK_START, VM_MEMORY_FILE);
+    int freeOffset = -1;//useful check
 
-            //conversion to num
-            int blockXX  = converter.hexToNum(xx_hex);
-            int offsetYY = converter.hexToNum(yy_hex);
+    for (int stackOff = 0; ; ++stackOff) {
+        int stackStart = 3 + stackOff * 7;
+        if (stackStart + 6 > (int)stackBlock.size()){
+            break;
+        }
 
-            // Read data word from data segment
-            std::string dataBlock = getBlock(blockXX, VM_MEMORY_FILE);
-            std::string dataWord = getWord(dataBlock, offsetYY);
-            
-
-            //stack
-            std::string stackBlock = getBlock(STACK_START, VM_MEMORY_FILE);
-            int freeOffset = -1; //will be useful in checking if stack is full
-
-            for (int stackOff = 0; ; ++stackOff) {
-
-                int stackStart = 3 + stackOff * 7;
-
-                if (stackStart + 6 > stackBlock.size()){
-                    break;
-                }
-
-                std::string stackWord = getWord(stackBlock, stackOff);
-                if (stackWord == "------") {
-                    freeOffset = stackOff;//if one space is found then stack has some free space and freeOffset value is changed
-                    break;
-                }
-            }
-
-            //stack is full
-            if (freeOffset == -1) {
-                return;
-            }
-
-            replaceBlockInFile(STACK_START, freeOffset, dataWord, VM_MEMORY_FILE); //push the word to stack
+        std::string stackWord = getWord(stackBlock, stackOff);
+        if (stackWord == "------") {
+            freeOffset = stackOff;
+            break;
         }
     }
-}
 
+    if (freeOffset == -1){
+      return; //stack is full
+    }
+
+    replaceBlockInFile(STACK_START, freeOffset, dataWord, VM_MEMORY_FILE);
+}
 //needs address so for example Address programCounter {5, 0} will start at 0500 
 //TODO checks all code segment blocks
 //now only checks the 5 but it should be checked in seperate function
@@ -89,9 +61,9 @@ Address JDXXYY(const Address& programCounter) {
 
 
     //checks if JD is found in that block if no just continues
-    if (word.compare(0, 2, "JD") != 0) {
-        return programCounter;
-    }
+    // if (word.compare(0, 2, "JD") != 0) {
+    //     return programCounter;
+    // }
 
     //JDXXYY XX - block YY - offset
     std::string xx = word.substr(2, 2);
