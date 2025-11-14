@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "cpu.hpp"
 
 std::string Converter::numToHex(int num1) {
    std::string v{};
@@ -100,3 +101,18 @@ std::string getWord(std::string block, int offset){
    return word;
 }
 
+//cpu
+void cpuReset(){
+   CPU cpu;
+   Address startingPoint = {20, 0};
+   Address stackStartingPoint = {10, 0};
+
+   cpu.PC = startingPoint;
+   cpu.SP = stackStartingPoint;
+
+   //reset flags
+   cpu.OF = 0;
+   cpu.SF = 0; 
+   cpu.ZF = 0;
+   cpu.CF = 0;
+}

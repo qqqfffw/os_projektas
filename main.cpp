@@ -1,6 +1,6 @@
 #include "commands.hpp"
 #include "utils.hpp"
-
+#include "cpu.hpp"
 using namespace std;
 
 #define TOTAL_BLOCKS 256
@@ -12,7 +12,7 @@ using namespace std;
 int main(){
    ofstream mem_file;
    Converter converter;
-
+   CPU cpu;
    // mem_file.open(VM_MEMORY_FILE);
 
    // if(!mem_file.is_open()){
@@ -48,8 +48,9 @@ int main(){
    // cout << word << endl;
 
    // cout << converter.hexToNum("0a") << endl;
-
-   runProgram();
+   
+   cpu.Reset();
+   runProgram(cpu);
 
    return 0;
 }

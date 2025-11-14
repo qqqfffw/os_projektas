@@ -1,10 +1,11 @@
 #include "commands.hpp"
 #include "utils.hpp"
+#include "cpu.hpp"
 
 //for now works only with one block 5
-void runProgram(){
+void runProgram(CPU &cpu){
 
-    Address pc = {5, 0}; //code segment start
+    Address pc = cpu.PC; //code segment start
 
     while(true){
 
@@ -16,7 +17,6 @@ void runProgram(){
             break;
         }
 
-
         std::string codeWord = getWord(codeSeg, pc.offset);
 
         if(codeWord.compare(0, 2, "PU") == 0){
@@ -24,14 +24,12 @@ void runProgram(){
         }else if(codeWord.compare(0, 2, "JD") == 0){
             pc = JDXXYY(pc);
         }else if(codeWord.compare(0, 7, "DEDUCT") == 0){
-            DEDUCT();
+            //DEDUCT();
         }else if(codeWord.compare(0, 7, "SUSPND") == 0){
             break;
         }
 
         pc.offset++;
+        cpu.PC = pc;
     }
-
-
-
 }
