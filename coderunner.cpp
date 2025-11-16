@@ -8,7 +8,6 @@ void runProgram(CPU &cpu){
     Address pc = cpu.PC; //code segment start
 
     while(true){
-
         std::string codeSeg = getBlock(pc.block, VM_MEMORY_FILE);
         int start = 3 + pc.offset * 7;
 

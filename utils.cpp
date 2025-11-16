@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include "cpu.hpp"
+#include "constants.hpp"
 
 std::string Converter::numToHex(int num1) {
    std::string v{};
@@ -99,6 +100,10 @@ std::string getWord(std::string block, int offset){
    word = block.substr(start, 6);
    
    return word;
+}
+
+void prepareProgram(){
+   replaceBlockInFile(constants::DATA_SEG_START, 0, "plplpllpllplplp", VM_MEMORY_FILE);
 }
 
 //cpu

@@ -1,6 +1,8 @@
 #include "commands.hpp"
 #include "utils.hpp"
 #include "cpu.hpp"
+#include "constants.hpp"
+
 using namespace std;
 
 #define TOTAL_BLOCKS 256
@@ -51,6 +53,8 @@ int main(){
    
    cpu.Reset();
    runProgram(cpu);
+
+   prepareProgram();
 
    return 0;
 }
