@@ -9,7 +9,7 @@
 #include "cpu.hpp"
 #include "constants.hpp"
 
-#define VM_MEMORY_FILE "vm_mem.txt"
+//#define VM_MEMORY_FILE "vm_mem.txt"
 
 class Converter {
 public:

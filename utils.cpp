@@ -103,7 +103,9 @@ std::string getWord(std::string block, int offset){
 }
 
 void prepareProgram(){
-   replaceBlockInFile(constants::DATA_SEG_START, 0, "plplpllpllplplp", VM_MEMORY_FILE);
+   std::string block = getBlock(constants::DATA_SEG_START, constants::VM_MEMORY_FILE);
+   std::cout << block << std::endl;
+   //replaceBlockInFile(constants::DATA_SEG_START, 0, "plplpllpllplplp", VM_MEMORY_FILE);
 }
 
 //cpu

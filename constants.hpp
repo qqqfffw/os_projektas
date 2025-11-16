@@ -21,6 +21,9 @@ namespace constants{
   // General use
   constexpr int GENERAL_START = 20;
   constexpr int GENERAL_END = 255;
+
+  //
+  inline const std::string VM_MEMORY_FILE = "vm_mem.txt";
 }
 
 #endif

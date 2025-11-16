@@ -1,5 +1,6 @@
 #include "commands.hpp"
 #include "utils.hpp"
+#include "constants.hpp"
 
 void DEDUCT(){
   return;
@@ -20,12 +21,12 @@ void PUXXYY(const std::string& pu) {
     int dataOffset = converter.hexToNum(yy_hex);
 
     //read data seg
-    std::string dataBlockLine = getBlock(dataBlock, VM_MEMORY_FILE);
+    std::string dataBlockLine = getBlock(dataBlock, constants::VM_MEMORY_FILE);
     int dataStart = 3 + dataOffset * 7;
     std::string dataWord = getWord(dataBlockLine, dataOffset);
 
     //find free space in stack
-    std::string stackBlock = getBlock(STACK_START, VM_MEMORY_FILE);
+    std::string stackBlock = getBlock(STACK_START, constants::VM_MEMORY_FILE);
     int freeOffset = -1;//useful check
 
     for (int stackOff = 0; ; ++stackOff) {
@@ -45,7 +46,7 @@ void PUXXYY(const std::string& pu) {
       return; //stack is full
     }
 
-    replaceBlockInFile(STACK_START, freeOffset, dataWord, VM_MEMORY_FILE);
+    replaceBlockInFile(STACK_START, freeOffset, dataWord, constants::VM_MEMORY_FILE);
 }
 //needs address so for example Address programCounter {5, 0} will start at 0500 
 //TODO checks all code segment blocks
@@ -54,7 +55,7 @@ Address JDXXYY(const Address& programCounter) {
     Converter converter;
 
     //reads current code block
-    std::string currentBlock = getBlock(programCounter.block, VM_MEMORY_FILE);
+    std::string currentBlock = getBlock(programCounter.block, constants::VM_MEMORY_FILE);
 
     //reads word ad offset
     std::string word = getWord(currentBlock, programCounter.offset);
