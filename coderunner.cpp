@@ -1,6 +1,7 @@
 #include "commands.hpp"
 #include "utils.hpp"
 #include "cpu.hpp"
+#include "constants.hpp"
 
 //for now works only with one block 5
 void runProgram(CPU &cpu){
@@ -8,7 +9,7 @@ void runProgram(CPU &cpu){
     Address pc = cpu.PC; //code segment start
 
     while(true){
-        std::string codeSeg = getBlock(pc.block, VM_MEMORY_FILE);
+        std::string codeSeg = getBlock(pc.block, constants::VM_MEMORY_FILE);
         int start = 3 + pc.offset * 7;
 
         //when no word has 6 end
@@ -24,6 +25,7 @@ void runProgram(CPU &cpu){
             pc = JDXXYY(pc);
         }else if(codeWord.compare(0, 7, "DEDUCT") == 0){
             //DEDUCT();
+            //continue;
         }else if(codeWord.compare(0, 7, "SUSPND") == 0){
             break;
         }

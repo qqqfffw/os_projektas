@@ -61,7 +61,7 @@ void replaceBlockInFile(int blockAddress, int offset, std::string newText, std::
    ss << std::hex << std::setw(2) << std::setfill('0') << std::nouppercase << blockAddress;
    std::string blockAddrStr = ss.str();
 
-   std::cout << blockAddrStr << std::endl;
+   //std::cout << blockAddrStr << std::endl;
 
    while (getline(inFile, line)) {
       if (!replaced && line.substr(0, 3) == blockAddrStr + " ") {
@@ -103,23 +103,67 @@ std::string getWord(std::string block, int offset){
 }
 
 void prepareProgram(){
-   std::string block = getBlock(constants::DATA_SEG_START, constants::VM_MEMORY_FILE);
-   std::cout << block << std::endl;
-   //replaceBlockInFile(constants::DATA_SEG_START, 0, "plplpllpllplplp", VM_MEMORY_FILE);
-}
+   std::string block = getBlock(constants::GENERAL_START, constants::VM_MEMORY_FILE);
+   int counter = 0;
+   int offset = 0;
+   int offset_start, offset_end = 0;
+   std::string current_word;
 
-//cpu
-void cpuReset(){
-   CPU cpu;
-   Address startingPoint = {20, 0};
-   Address stackStartingPoint = {10, 0};
+   // Find the whole program code in memory.
+   int star_counter = 0;
+   while(1){
+      current_word = getWord(block, offset);
 
-   cpu.PC = startingPoint;
-   cpu.SP = stackStartingPoint;
+      
+      if(current_word == "******" && star_counter == 0){
+         offset_start = offset;
+         star_counter += 1;
+      }else if(current_word == "******" && star_counter == 1){
+         offset_end = offset;
+         star_counter += 1;
+      }
+      
+      if(star_counter == 2) break;
+      offset += 1;
+   }
+   
+   int status = 0; // 0 -- nothing/start/title; 1 -- ..data segment; 2 -- ..code segment
+   int current_offset = offset_start;
+   int code_offset = 0;
+   int data_offset = 0;
+   while(current_offset < offset_end){
+      current_word = getWord(block, current_offset);
 
-   //reset flags
-   cpu.OF = 0;
-   cpu.SF = 0; 
-   cpu.ZF = 0;
-   cpu.CF = 0;
+      if(current_word == "..data"){
+         status = 1;
+         // Skip word "..data" (no need to write it to the mem) and get new word 
+         current_offset += 1;
+         current_word = getWord(block, current_offset);
+      }
+      else if(current_word == "..code"){
+         status = 2;
+         // Skip word "..code" (no need to write it to the mem) and get new word
+         current_offset += 1;
+         current_word = getWord(block, current_offset);
+      }
+
+      switch(status){
+         case 0:
+            // Skip start stars and title
+            current_offset += 2;
+            break;
+         case 1:
+            // Put all of the data in the data segment
+            replaceBlockInFile(constants::DATA_SEG_START, data_offset, current_word.substr(3), constants::VM_MEMORY_FILE); 
+            data_offset += 1;
+            current_offset += 1;
+            break;
+         case 2:
+            // Put all of the commands into the code segment
+            replaceBlockInFile(constants::CODE_SEG_START, code_offset, current_word, constants::VM_MEMORY_FILE); 
+            code_offset += 1;
+            current_offset += 1;
+            break;
+      }
+   }
 }
