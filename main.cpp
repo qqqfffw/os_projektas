@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "commands.hpp"
 #include "utils.hpp"
 #include "cpu.hpp"
@@ -5,20 +6,15 @@
 
 using namespace std;
 
-//#define TOTAL_BLOCKS 256
-//#define BLOCK_SIZE 256
-//#define STACK_SEG_START 10
-//#define STACK_SEG_END 19
-//#define DATA_SEG_START 0
-
-int main(){
+void createMemoryTxt(){
    ofstream mem_file;
    Converter converter;
-   CPU cpu;
+
    mem_file.open(constants::VM_MEMORY_FILE);
 
    if(!mem_file.is_open()){
-      return 1;
+      cout << "Failed to open file" << endl;
+      return;
    }
 
    for(int i=0; i<constants::TOTAL_BLOCKS; ++i){
@@ -35,11 +31,39 @@ int main(){
    cout << "File created" << endl;
 
    mem_file.close();
-   
-   prepareProgram();
+}
 
+void allocateMemory(){
+   CPU::Byte *memPtr;
+   memPtr = new CPU::Byte[6 * 256]{0}; // 
+
+   for(int i = 0; i <= 5; ++i){
+      cout << memPtr[i] << " ";
+   }
+}
+
+int main(){
+   CPU cpu;
    cpu.Reset();
    runProgram(cpu);
+
+   int option = -1;
+   cout << "Welcome!" << endl;
+   cout << "\nSelect an option:" << endl;
+   cout << "1. Create a new virtual machine." << endl;
+   cout << "2. Exit." << endl;
+
+   cin >> option;
+
+   if(option == 1){
+      cout << "Creating a new virtual machine..." << endl;
+   }else if(option == 2){
+      cout << "Exiting..." << endl;
+      return 0;
+   }else{
+      cout << "Failed to select an option. Exiting..." << endl;
+      return 0;
+   }
 
    return 0;
 }
